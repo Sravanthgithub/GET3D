@@ -253,8 +253,8 @@ def save_textured_mesh_for_inference(
                 img = np.asarray(tex_map.permute(1, 2, 0).data.cpu().numpy(), dtype=np.float32)
                 img = (img - lo) * (255 / (hi - lo))
                 img = img.clip(0, 255)
-                mask = np.sum(img.astype(np.float), axis=-1, keepdims=True)
-                mask = (mask <= 3.0).astype(np.float)
+                mask = np.sum(img.astype(np.float32), axis=-1, keepdims=True)
+                mask = (mask <= 3.0).astype(np.float32)
                 kernel = np.ones((3, 3), 'uint8')
                 dilate_img = cv2.dilate(img, kernel, iterations=1)
                 img = img * (1 - mask) + dilate_img * mask
