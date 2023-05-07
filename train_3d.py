@@ -163,7 +163,7 @@ def parse_comma_separated_list(s):
 @click.option('--inference_save_interpolation', help='inference to generate interpolation results', metavar='BOOL', type=bool, default=False, show_default=False)
 @click.option('--inference_compute_fid', help='inference to generate interpolation results', metavar='BOOL', type=bool, default=False, show_default=False)
 @click.option('--inference_generate_geo', help='inference to generate geometry points', metavar='BOOL', type=bool, default=False, show_default=False)
-@click.option('--count', help= 'No. of 3D shapes wanted', metavar = 'INT', type=click.IntRange(min=1), default=25)
+@click.option('--count', help='No. of 3D shapes wanted', metavar = 'INT', type=click.IntRange(min=1), default=25)
 ### Configs for dataset
 
 @click.option('--data', help='Path to the Training data Images', metavar='[DIR]', type=str, default='./tmp')
@@ -237,6 +237,7 @@ def main(**kwargs):
         c.inference_save_interpolation = opts.inference_save_interpolation
         c.inference_compute_fid = opts.inference_compute_fid
         c.inference_generate_geo = opts.inference_generate_geo
+        c.count = opts.count
 
     c.training_set_kwargs, dataset_name = init_dataset_kwargs(data=opts.data, opt=opts)
     if opts.cond and not c.training_set_kwargs.use_labels:
