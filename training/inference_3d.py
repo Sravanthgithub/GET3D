@@ -42,6 +42,7 @@ def inference(
         inference_save_interpolation=False,
         inference_compute_fid=False,
         inference_generate_geo=False,
+        count = 25,
         **dummy_kawargs
 ):
     from torch_utils.ops import upfirdn2d
@@ -77,7 +78,8 @@ def inference(
         G.load_state_dict(model_state_dict['G'], strict=True)
         G_ema.load_state_dict(model_state_dict['G_ema'], strict=True)
         # D.load_state_dict(model_state_dict['D'], strict=True)
-    grid_size = (2, 2)
+    num = round(count**(1/2)) + 1
+    grid_size = (num, num)
     n_shape = grid_size[0] * grid_size[1]
     grid_z = torch.randn([n_shape, G.z_dim], device=device).split(1)  # random code for geometry
     grid_tex_z = torch.randn([n_shape, G.z_dim], device=device).split(1)  # random code for texture
