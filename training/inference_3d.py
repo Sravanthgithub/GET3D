@@ -9,6 +9,7 @@
 
 import copy
 import os
+import math
 
 import numpy as np
 import torch
@@ -24,6 +25,22 @@ def clean_training_set_kwargs_for_metrics(training_set_kwargs):
     if 'add_camera_cond' in training_set_kwargs:
         training_set_kwargs['add_camera_cond'] = True
     return training_set_kwargs
+
+
+def find_factors(num):
+    factors = []
+    for i in range(1, num+1):
+        if num % i == 0:
+            factors.append(i)
+    if len(factors) % 2 == 0:
+        mid = int(len(factors) / 2)
+        factor1 = factors[mid - 1]
+        factor2 = factors[mid]
+    else:
+        mid = int(len(factors) / 2)
+        factor1 = factors[mid]
+        factor2 = factors[mid]
+    return factor1, factor2
 
 
 # ----------------------------------------------------------------------------
@@ -78,8 +95,8 @@ def inference(
         G.load_state_dict(model_state_dict['G'], strict=True)
         G_ema.load_state_dict(model_state_dict['G_ema'], strict=True)
         # D.load_state_dict(model_state_dict['D'], strict=True)
-    num = round(count**(1/2)) + 1
-    grid_size = (num, num)
+    factor_1, factor_2 = find_factors(count)
+    grid_size = (factor_1, factor_2)
     n_shape = grid_size[0] * grid_size[1]
     grid_z = torch.randn([n_shape, G.z_dim], device=device).split(1)  # random code for geometry
     grid_tex_z = torch.randn([n_shape, G.z_dim], device=device).split(1)  # random code for texture
